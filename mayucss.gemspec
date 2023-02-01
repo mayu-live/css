@@ -4,7 +4,7 @@ require_relative "lib/mayucss/version"
 
 Gem::Specification.new do |spec|
   spec.name = "mayucss"
-  spec.version = Mayucss::VERSION
+  spec.version = MayuCSS::VERSION
   spec.authors = ["Andreas Alin"]
   spec.email = ["andreas.alin@gmail.com"]
 

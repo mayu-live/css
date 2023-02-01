@@ -4,12 +4,33 @@ This library wraps [lightningcss](https://github.com/parcel-bundler/lightningcss
 
 The idea is to use it for CSS parsing/transformations in [Mayu Live](https://github.com/mayu-live/framework).
 
+I do not know Rust. I have no idea what I'm doing.
+
 ## Installation
 
+To be disclosed.
 
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+require "mayucss"
+
+result = MayuCSS.transform("/app/components/Hello.css", <<~CSS)
+  ul { background: rgb(0 128 255 / 50%); }
+  li { border: 1px solid #f0f; }
+  .foo { border: 1px solid #f0f; }
+  .bar { background: url("./bar.png"); }
+CSS
+
+puts "Code:"
+puts result.code
+puts "Classes:"
+pp result.classes
+puts "Elements:"
+pp result.elements
+puts "Dependencies:"
+pp result.dependencies
+```
 
 ## Development
 
