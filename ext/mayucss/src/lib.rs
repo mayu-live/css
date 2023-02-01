@@ -1,6 +1,5 @@
 use lightningcss::dependencies::DependencyOptions;
 use lightningcss::{
-    declaration::DeclarationBlock,
     selector::{Component, Selector},
     stylesheet::{MinifyOptions, ParserOptions, PrinterOptions, StyleSheet},
     visit_types,
@@ -9,6 +8,7 @@ use lightningcss::{
 use magnus::{define_module, function, method, prelude::*, Error};
 use std::collections::HashMap;
 
+#[allow(dead_code)]
 struct TransformOptions {
     component: String,
     filename: String,
@@ -54,15 +54,21 @@ impl<'a, 'i> Visitor<'i> for TransformNamesVisitor<'a> {
         for s in selector.iter_mut_raw_match_order() {
             match s {
                 Component::Class(c) => {
-                    let formatted: String =
-                        format!("{}_{}?{}", self.options.component, &c, self.options.hash);
+                    let formatted: String = format!(
+                        "{component}.{name}?{hash}",
+                        component = self.options.component,
+                        name = &c,
+                        hash = self.options.hash
+                    );
                     self.classes.insert((&c).to_string(), formatted.clone());
                     *s = Component::Class(formatted.into());
                 }
                 Component::LocalName(n) => {
                     let formatted: String = format!(
-                        "{}.{}?{}",
-                        self.options.component, n.name, self.options.hash
+                        "{component}_{name}?{hash}",
+                        component = self.options.component,
+                        name = n.name,
+                        hash = self.options.hash
                     );
                     self.elements
                         .insert((&n.name).to_string(), formatted.clone());
@@ -113,8 +119,6 @@ fn hash(s: String) -> String {
 }
 
 fn transform(filename: String, source: String) -> TransformResult {
-    use std::path::{Path, PathBuf};
-
     let mut stylesheet = StyleSheet::parse(
         &source,
         ParserOptions {
@@ -129,7 +133,7 @@ fn transform(filename: String, source: String) -> TransformResult {
 
     stylesheet.visit(&mut TransformNamesVisitor {
         options: TransformOptions {
-            component: Path::new(&filename)
+            component: std::path::Path::new(&filename)
                 .with_extension("")
                 .display()
                 .to_string(),
