@@ -1,5 +1,8 @@
 # MayuCSS
 
+This library wraps [lightningcss](https://github.com/parcel-bundler/lightningcss).
+
+The idea is to use it for CSS parsing/transformations in [Mayu Live](https://github.com/mayu-live/framework).
 
 ## Installation
 
