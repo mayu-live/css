@@ -1,0 +1,24 @@
+PATH
+  remote: .
+  specs:
+    mayucss (0.0.1)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    rake (13.0.6)
+    rake-compiler (1.2.1)
+      rake
+    rb_sys (0.9.58)
+
+PLATFORMS
+  x86_64-darwin-20
+
+DEPENDENCIES
+  mayucss!
+  rake (~> 13.0)
+  rake-compiler
+  rb_sys
+
+BUNDLED WITH
+   2.4.3
