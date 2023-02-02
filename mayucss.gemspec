@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.summary = "CSS parsing for mayu live"
   # spec.description = "TODO: Write a longer description or delete this line."
   spec.homepage = "https://github.com/mayu-live/mayu-css"
-  spec.license = "MIT"
+  spec.license = "MPL"
   spec.required_ruby_version = ">= 2.6.0"
   spec.required_rubygems_version = ">= 3.3.11"
 
