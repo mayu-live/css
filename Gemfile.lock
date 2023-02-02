@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    mayucss (0.0.2)
+    mayucss (0.0.3)
 
 GEM
   remote: https://rubygems.org/
