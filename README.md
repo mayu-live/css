@@ -1,14 +1,25 @@
 # MayuCSS
 
-This library wraps [lightningcss](https://github.com/parcel-bundler/lightningcss).
+This library is used for CSS parsing/transformations/minifications in [Mayu Live](https://github.com/mayu-live/framework).
 
-The idea is to use it for CSS parsing/transformations in [Mayu Live](https://github.com/mayu-live/framework).
+It uses [lightningcss](https://github.com/parcel-bundler/lightningcss) ([webpage](https://lightningcss.dev/))
+which is a state-of-the-art CSS parser/transformer/bundler/minifier.
 
 I do not know Rust. I have no idea what I'm doing.
 
 ## Installation
 
-To be disclosed.
+MayuCSS is [published on rubygems.org](https://rubygems.org/gems/mayucss)
+and there are pre-built extensions for:
+
+* `aarch64-linux`
+* `arm64-darwin`
+* `x86_64-darwin`
+* `x86_64-linux`
+
+```
+gem install mayucss
+```
 
 ## Usage
 
