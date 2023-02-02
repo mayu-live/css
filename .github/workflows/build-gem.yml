@@ -13,7 +13,7 @@ jobs:
         platform:
           - x86_64-linux
           # - x86_64-linux-musl
-          - aarch64-linux
+          # - aarch64-linux
           # - arm-linux
           - x86_64-darwin
           - arm64-darwin
@@ -32,7 +32,8 @@ jobs:
           version: 'latest' # optional
           ruby-versions: '3.2' # optional
           setup: | # optional
-            echo "Do something custom before compiling..."
+            bundle
+            rake -T
           env: | # optional
             SOME_OTHER_ENV=some_value
 

@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    mayucss (0.0.3)
+    mayucss (0.0.4)
 
 GEM
   remote: https://rubygems.org/
@@ -12,13 +12,16 @@ GEM
     rb_sys (0.9.58)
 
 PLATFORMS
+  arm64-darwin
+  x86_64-darwin
   x86_64-darwin-20
+  x86_64-linux
 
 DEPENDENCIES
   mayucss!
   rake (~> 13.0)
-  rake-compiler
-  rb_sys
+  rake-compiler (~> 1.2.1)
+  rb_sys (~> 0.9.58)
 
 BUNDLED WITH
    2.4.3
