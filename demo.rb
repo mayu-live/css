@@ -1,8 +1,8 @@
 require "bundler/setup"
-require "mayucss"
+require "mayu/css"
 require "json"
 
-puts MayuCSS.minify(__FILE__, <<~CSS)
+puts Mayu::CSS.minify(__FILE__, <<~CSS)
 foo {
   background: rgb(50 32 42 / 50%);
   background-image: url("foobar.png");
@@ -14,7 +14,7 @@ CSS
 
 puts "############"
 
-pp JSON.parse(MayuCSS.serialize(__FILE__, <<~CSS))
+pp JSON.parse(Mayu::CSS.serialize(__FILE__, <<~CSS))
 foo {
   background: rgb(50 32 42 / 50%);
 }
@@ -25,7 +25,7 @@ CSS
 
 puts "############"
 
-result =  MayuCSS.transform(__FILE__, <<~CSS)
+result =  Mayu::CSS.transform(__FILE__, <<~CSS)
 foo {
   background: rgb(50 32 42 / 50%);
   background-image: url("foobar.png");

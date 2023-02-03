@@ -13,15 +13,16 @@ PLATFORMS = [
   # "x64-mingw-ucrt",
 ]
 
-spec = Gem::Specification.load("mayucss.gemspec")
+spec = Gem::Specification.load("mayu-css.gemspec")
 spec.requirements.clear
 spec.required_ruby_version = nil
 spec.required_rubygems_version = nil
 spec.extensions.clear
 spec.files -= Dir["ext/**/*"]
 
-Rake::ExtensionTask.new("mayucss", spec) do |ext|
-  ext.lib_dir = "lib/mayucss"
+Rake::ExtensionTask.new("ext", spec) do |ext|
+  ext.lib_dir = "lib/mayu/css"
+  ext.ext_dir = "ext"
   ext.cross_compile = true
   ext.cross_platform = PLATFORMS
 end

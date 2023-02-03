@@ -300,6 +300,18 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7fcaabb2fef8c910e7f4c7ce9f67a1283a1715879a7c230ca9d6d1ae31f16d91"
 
 [[package]]
+name = "ext"
+version = "0.1.0"
+dependencies = [
+ "base64",
+ "lightningcss",
+ "magnus",
+ "serde",
+ "serde_json",
+ "sha2",
+]
+
+[[package]]
 name = "fxhash"
 version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -486,18 +498,6 @@ name = "matches"
 version = "0.1.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2532096657941c2fea9c289d370a250971c689d4f143798ff67113ec042024a5"
-
-[[package]]
-name = "mayucss"
-version = "0.1.0"
-dependencies = [
- "base64",
- "lightningcss",
- "magnus",
- "serde",
- "serde_json",
- "sha2",
-]
 
 [[package]]
 name = "memchr"

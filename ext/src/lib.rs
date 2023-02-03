@@ -15,7 +15,7 @@ struct TransformOptions {
     hash: String,
 }
 
-#[magnus::wrap(class = "MayuCSS::TransformResult", free_immediately, size)]
+#[magnus::wrap(class = "Mayu::CSS::TransformResult", free_immediately, size)]
 struct TransformResult {
     code: String,
     classes: HashMap<String, String>,
@@ -178,7 +178,8 @@ fn minify(filename: String, source: String) -> String {
 
 #[magnus::init]
 fn init() -> Result<(), Error> {
-    let module = define_module("MayuCSS")?;
+    let mayu = define_module("Mayu")?;
+    let module = mayu.define_module("CSS")?;
     module.define_singleton_method("minify", function!(minify, 2))?;
     module.define_singleton_method("serialize", function!(serialize, 2))?;
     module.define_singleton_method("transform", function!(transform, 2))?;

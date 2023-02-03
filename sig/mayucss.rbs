@@ -1,4 +1,6 @@
-module MayuCSS
-  VERSION: String
-  # See the writing guide of rbs: https://github.com/ruby/rbs#guides
+module Mayu
+  module CSS
+    VERSION: String
+    # See the writing guide of rbs: https://github.com/ruby/rbs#guides
+  end
 end

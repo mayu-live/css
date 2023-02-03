@@ -3,5 +3,5 @@
 # in the ext/ directory.
 
 [workspace]
-members = ["./ext/mayucss"]
+members = ["./ext"]
 resolver = "2"

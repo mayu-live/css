@@ -3,4 +3,4 @@
 require "mkmf"
 require "rb_sys/mkmf"
 
-create_rust_makefile("mayucss/mayucss")
+create_rust_makefile("ext")

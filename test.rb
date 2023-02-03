@@ -1,7 +1,7 @@
 require "bundler/setup"
-require "mayucss"
+require "mayu-css"
 
-result = MayuCSS.transform("/app/components/Hello.css", <<~CSS)
+result = Mayu::CSS.transform("/app/components/Hello.css", <<~CSS)
   ul { background: rgb(0 128 255 / 50%); }
   li { border: 1px solid #f0f; }
   .foo { border: 1px solid #f0f; }

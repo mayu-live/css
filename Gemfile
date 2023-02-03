@@ -2,5 +2,5 @@
 
 source "https://rubygems.org"
 
-# Specify your gem's dependencies in mayucss.gemspec
+# Specify your gem's dependencies in mayu-css.gemspec
 gemspec

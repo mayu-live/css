@@ -48,9 +48,9 @@ jobs:
       - name: Smoke gem install
         if: matrix.ruby-platform == 'x86_64-linux' # GitHub actions architecture
         run: |
-          gem install pkg/mayucss-*-x86_64-linux.gem --verbose
-          script="puts MayuCSS.transform('f','a{color:rgb(50,32,52);}').code"
-          ruby -rmayucss -e "$script" | grep "color: #322034;"
+          gem install pkg/mayu-css-*-x86_64-linux.gem --verbose
+          script="puts Mayu::CSS.transform('f','a{color:rgb(50,32,52);}').code"
+          ruby -rmayu/css -e "$script" | grep "color: #322034;"
           echo "✅ Successfully gem installed"
 
       - name: Display structure of built gems
@@ -75,7 +75,7 @@ jobs:
 
       - name: Ensure version matches the tag
         run: |
-          GEM_VERSION=$(grep VERSION lib/mayucss/version.rb | head -n 1 | cut -d'"' -f2)
+          GEM_VERSION=$(grep VERSION lib/mayu/css/version.rb | head -n 1 | cut -d'"' -f2)
           if [ "v$GEM_VERSION" != "${{ github.ref_name }}" ]; then
             echo "Gem version does not match tag"
             echo "  v$GEM_VERSION != ${{ github.ref_name }}"

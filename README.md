@@ -1,4 +1,4 @@
-# MayuCSS
+# Mayu::CSS
 
 This library is used for CSS parsing/transformations/minifications in [Mayu Live](https://github.com/mayu-live/framework).
 
@@ -9,7 +9,7 @@ I do not know Rust. I have no idea what I'm doing.
 
 ## Installation
 
-MayuCSS is [published on rubygems.org](https://rubygems.org/gems/mayucss)
+Mayu::CSS is [published on rubygems.org](https://rubygems.org/gems/mayu-css)
 and there are pre-built extensions for:
 
 * `aarch64-linux`
@@ -18,15 +18,15 @@ and there are pre-built extensions for:
 * `x86_64-linux`
 
 ```
-gem install mayucss
+gem install mayu-css
 ```
 
 ## Usage
 
 ```ruby
-require "mayucss"
+require "mayu/css"
 
-result = MayuCSS.transform("/app/components/Hello.css", <<~CSS)
+result = Mayu::CSS.transform("/app/components/Hello.css", <<~CSS)
   ul { background: rgb(0 128 255 / 50%); }
   li { border: 1px solid #f0f; }
   .foo { border: 1px solid #f0f; }
@@ -51,7 +51,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/mayu-live/mayucss.
+Bug reports and pull requests are welcome on GitHub at https://github.com/mayu-live/css.
 
 ## License
 
