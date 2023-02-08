@@ -15,9 +15,8 @@ module Mayu
     class Error < StandardError; end
 
     class TransformResult
-      def dependencies
-        JSON.parse(serialized_dependencies, symbolize_names: true)
-      end
+      def dependencies = JSON.parse(serialized_dependencies, symbolize_names: true)
+      def exports = JSON.parse(serialized_exports, symbolize_names: true)
     end
   end
 end

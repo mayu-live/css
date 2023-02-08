@@ -20,6 +20,7 @@ struct TransformResult {
     code: String,
     classes: HashMap<String, String>,
     elements: HashMap<String, String>,
+    serialized_exports: String,
     serialized_dependencies: String,
 }
 
@@ -30,6 +31,10 @@ impl TransformResult {
 
     fn serialized_dependencies(&self) -> String {
         self.serialized_dependencies.clone()
+    }
+
+    fn serialized_exports(&self) -> String {
+        self.serialized_exports.clone()
     }
 
     fn classes(&self) -> HashMap<String, String> {
@@ -123,6 +128,10 @@ fn transform(filename: String, source: String) -> TransformResult {
         &source,
         ParserOptions {
             filename: filename.clone(),
+            css_modules: Some(lightningcss::css_modules::Config {
+                pattern: lightningcss::css_modules::Pattern::parse("[local]").unwrap(),
+                dashed_idents: false,
+            }),
             ..ParserOptions::default()
         },
     )
@@ -151,12 +160,14 @@ fn transform(filename: String, source: String) -> TransformResult {
         })
         .unwrap();
 
+    let serialized_exports = serde_json::to_string(&res.exports.unwrap()).unwrap();
     let serialized_dependencies = serde_json::to_string(&res.dependencies.unwrap()).unwrap();
 
     TransformResult {
         code: res.code,
         classes: classes,
         elements: elements,
+        serialized_exports: serialized_exports,
         serialized_dependencies: serialized_dependencies,
     }
 }
@@ -187,6 +198,10 @@ fn init() -> Result<(), Error> {
     class.define_method("code", method!(TransformResult::code, 0))?;
     class.define_method("classes", method!(TransformResult::classes, 0))?;
     class.define_method("elements", method!(TransformResult::elements, 0))?;
+    class.define_method(
+        "serialized_exports",
+        method!(TransformResult::serialized_exports, 0),
+    )?;
     class.define_method(
         "serialized_dependencies",
         method!(TransformResult::serialized_dependencies, 0),

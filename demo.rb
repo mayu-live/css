@@ -33,9 +33,13 @@ foo {
 .b-ar {
   background: rgb(50 32 42 / 50%);
 }
+.hopp {
+  composes: b-ar;
+}
 CSS
 
 p result.classes
 p result.elements
-p result.code
-p result.dependencies
+puts "\e[33m#{result.code}\e[0m"
+p(dependencies: result.dependencies)
+p(exports: result.exports)
