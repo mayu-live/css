@@ -6,7 +6,7 @@ use lightningcss::{
     visitor::{Visit, VisitTypes, Visitor},
 };
 use magnus::{define_module, function, method, prelude::*, Error};
-use std::collections::HashMap;
+use std::{collections::HashMap, convert::Infallible};
 
 #[allow(dead_code)]
 struct TransformOptions {
@@ -53,9 +53,10 @@ struct TransformNamesVisitor<'a> {
 }
 
 impl<'a, 'i> Visitor<'i> for TransformNamesVisitor<'a> {
+    type Error = Infallible;
     const TYPES: VisitTypes = visit_types!(SELECTORS);
 
-    fn visit_selector(&mut self, selector: &mut Selector<'i>) {
+    fn visit_selector(&mut self, selector: &mut Selector<'i>) -> Result<(), Self::Error> {
         for s in selector.iter_mut_raw_match_order() {
             match s {
                 Component::Class(c) => {
@@ -82,6 +83,8 @@ impl<'a, 'i> Visitor<'i> for TransformNamesVisitor<'a> {
                 _ => {}
             }
         }
+
+        Ok(())
     }
 }
 
@@ -151,7 +154,7 @@ fn transform(filename: String, source: String) -> TransformResult {
         },
         classes: &mut classes,
         elements: &mut elements,
-    });
+    }).unwrap();
 
     let res = stylesheet
         .to_css(PrinterOptions {
