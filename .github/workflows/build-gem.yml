@@ -12,30 +12,46 @@ jobs:
       matrix:
         platform:
           - x86_64-linux
-          # - x86_64-linux-musl
-          # - aarch64-linux
-          # - arm-linux
+          - aarch64-linux
           - x86_64-darwin
           - arm64-darwin
+          # Unsupported:
+          # - x86_64-linux-musl
+          # - arm-linux
           # - x64-mingw32
           # - x64-mingw-ucrt
+        ruby-version: ["3.1", "3.2", "3.3"]
     steps:
       - uses: actions/checkout@v2
 
-      - uses: ruby/setup-ruby@v1
+      - uses: oxidize-rb/actions/setup-ruby-and-rust@v1
         with:
-          ruby-version: '3.2'
+          ruby-version: "3.2"
+          bundler-cache: false
+          cargo-cache: true
+          cargo-vendor: true
+          cache-version: v0-${{ matrix.platform }}
 
-      - uses: oxidize-rb/cross-gem-action@v7
+      - uses: oxidize-rb/actions/cross-gem@v1
+        id: cross-gem
         with:
           platform: ${{ matrix.platform }}
-          version: 'latest' # optional
-          ruby-versions: '3.2' # optional
-          setup: | # optional
+          ruby-versions: ${{ join(matrix.ruby-version, ',') }}
+          setup:
             bundle
             rake -T
-          env: | # optional
-            SOME_OTHER_ENV=some_value
+
+      - name: Smoke gem install
+        if: matrix.ruby-platform == 'x86_64-linux' # GitHub actions architecture
+        run: |
+          gem install pkg/mayu-css-*-x86_64-linux.gem --verbose
+          script="puts Mayu::CSS.transform('f','a{color:rgb(50,32,52);}').code"
+          ruby -rmayu/css -e "$script" | grep "color: #322034;"
+          echo "✅ Successfully gem installed"
+
+      - name: Display structure of built gems
+        run: ls -R
+        working-directory: pkg/
 
       - uses: actions/download-artifact@v3
         with:
