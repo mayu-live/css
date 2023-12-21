@@ -2,11 +2,17 @@ use lightningcss::dependencies::DependencyOptions;
 use lightningcss::{
     selector::{Component, Selector},
     stylesheet::{MinifyOptions, ParserOptions, PrinterOptions, StyleSheet},
-    visit_types,
     visitor::{Visit, VisitTypes, Visitor},
 };
-use magnus::{define_module, function, method, prelude::*, Error};
-use std::collections::HashMap;
+use magnus::{
+    class,
+    define_module,
+    function,
+    method,
+    prelude::*,
+    Error
+};
+use std::{collections::HashMap, convert::Infallible};
 
 #[allow(dead_code)]
 struct TransformOptions {
@@ -53,9 +59,13 @@ struct TransformNamesVisitor<'a> {
 }
 
 impl<'a, 'i> Visitor<'i> for TransformNamesVisitor<'a> {
-    const TYPES: VisitTypes = visit_types!(SELECTORS);
+    type Error = Infallible;
 
-    fn visit_selector(&mut self, selector: &mut Selector<'i>) {
+    fn visit_types(&self) -> VisitTypes {
+        VisitTypes::RULES
+    }
+
+    fn visit_selector(&mut self, selector: &mut Selector<'i>) -> Result<(), Self::Error> {
         for s in selector.iter_mut_raw_match_order() {
             match s {
                 Component::Class(c) => {
@@ -82,6 +92,8 @@ impl<'a, 'i> Visitor<'i> for TransformNamesVisitor<'a> {
                 _ => {}
             }
         }
+
+        Ok(())
     }
 }
 
@@ -140,7 +152,7 @@ fn transform(filename: String, source: String) -> TransformResult {
     let mut classes = HashMap::new();
     let mut elements = HashMap::new();
 
-    stylesheet.visit(&mut TransformNamesVisitor {
+    let _ = stylesheet.visit(&mut TransformNamesVisitor {
         options: TransformOptions {
             component: std::path::Path::new(&filename)
                 .with_extension("")
@@ -194,7 +206,8 @@ fn init() -> Result<(), Error> {
     module.define_singleton_method("minify", function!(minify, 2))?;
     module.define_singleton_method("serialize", function!(serialize, 2))?;
     module.define_singleton_method("transform", function!(transform, 2))?;
-    let class = module.define_class("TransformResult", Default::default())?;
+
+    let class = module.define_class("TransformResult", class::object())?;
     class.define_method("code", method!(TransformResult::code, 0))?;
     class.define_method("classes", method!(TransformResult::classes, 0))?;
     class.define_method("elements", method!(TransformResult::elements, 0))?;

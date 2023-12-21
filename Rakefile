@@ -3,16 +3,6 @@
 require "bundler/gem_tasks"
 require "rake/extensiontask"
 
-PLATFORMS = [
-  "x86_64-linux",
-  # "arm-linux",
-  "aarch64-linux",
-  "x86_64-darwin",
-  "arm64-darwin",
-  # "x64-mingw32",
-  # "x64-mingw-ucrt",
-]
-
 spec = Gem::Specification.load("mayu-css.gemspec")
 spec.requirements.clear
 spec.required_ruby_version = nil
@@ -24,10 +14,20 @@ Rake::ExtensionTask.new("ext", spec) do |ext|
   ext.lib_dir = "lib/mayu/css"
   ext.ext_dir = "ext"
   ext.cross_compile = true
-  ext.cross_platform = PLATFORMS
+  ext.cross_platform = [
+    "x86_64-linux",
+    "aarch64-linux",
+    "x86_64-darwin",
+    "arm64-darwin",
+  ]
 end
 
 Gem::PackageTask.new(spec) do |pkg|
+end
+
+desc "Build native extension for a given platform (i.e. `rake 'native[x86_64-linux]'`)"
+task :native, [:platform] do |_t, platform:|
+  sh "bundle", "exec", "rb-sys-dock", "--platform", platform, "--build"
 end
 
 task default: :compile

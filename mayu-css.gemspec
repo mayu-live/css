@@ -28,7 +28,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
   spec.extensions = ["ext/Cargo.toml"]
 
-  spec.add_development_dependency "rake-compiler", "~> 1.2.1"
-  spec.add_development_dependency "rb_sys", "~> 0.9.58"
-  spec.add_development_dependency "rake", "~> 13.0"
+  spec.add_development_dependency "rake-compiler", "~> 1.2.5"
+  spec.add_development_dependency "rb_sys", "~> 0.9.85"
+  spec.add_development_dependency "rake", "~> 13.1"
 end

@@ -6,10 +6,10 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    rake (13.0.6)
-    rake-compiler (1.2.1)
+    rake (13.1.0)
+    rake-compiler (1.2.5)
       rake
-    rb_sys (0.9.58)
+    rb_sys (0.9.85)
 
 PLATFORMS
   aarch64-linux
@@ -20,9 +20,9 @@ PLATFORMS
 
 DEPENDENCIES
   mayu-css!
-  rake (~> 13.0)
-  rake-compiler (~> 1.2.1)
-  rb_sys (~> 0.9.58)
+  rake (~> 13.1)
+  rake-compiler (~> 1.2.5)
+  rb_sys (~> 0.9.85)
 
 BUNDLED WITH
    2.4.3
