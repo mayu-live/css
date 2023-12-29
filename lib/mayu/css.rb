@@ -13,6 +13,7 @@ end
 module Mayu
   module CSS
     class Error < StandardError; end
+    class ParseError < Error; end
 
     class TransformResult
       def dependencies = JSON.parse(serialized_dependencies, symbolize_names: true)

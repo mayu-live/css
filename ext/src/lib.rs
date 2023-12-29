@@ -10,9 +10,29 @@ use magnus::{
     function,
     method,
     prelude::*,
-    Error
+    Ruby,
+    RModule,
+    Error,
+    value::Lazy,
+    exception::ExceptionClass,
+    gc::register_mark_object
 };
 use std::{collections::HashMap, convert::Infallible};
+
+static PARSE_ERROR: Lazy<ExceptionClass> = Lazy::new(|ruby| {
+    let ex = ruby
+        .class_object()
+        .const_get::<_, RModule>("Mayu")
+        .unwrap()
+        .const_get::<_, RModule>("CSS")
+        .unwrap()
+        .const_get("ParseError")
+        .unwrap();
+    // ensure `ex` is never garbage collected (e.g. if constant is
+    // redefined) and also not moved under compacting GC.
+    register_mark_object(ex);
+    ex
+});
 
 #[allow(dead_code)]
 struct TransformOptions {
@@ -110,16 +130,17 @@ fn to_css(stylesheet: StyleSheet) -> String {
 
 //////////////
 
-fn serialize(filename: String, source: String) -> String {
-    let stylesheet = StyleSheet::parse(
+fn serialize(ruby: &Ruby, filename: String, source: String) -> Result<String, Error> {
+    match StyleSheet::parse(
         &source,
         ParserOptions {
             filename: filename,
             ..ParserOptions::default()
         },
-    )
-    .unwrap();
-    return serde_json::to_string(&stylesheet).unwrap();
+    ) {
+        Ok(stylesheet) => Ok(serde_json::to_string(&stylesheet).unwrap()),
+        Err(err) => return Err(Error::new(ruby.get_inner(&PARSE_ERROR), err.to_string()))
+    }
 }
 
 fn hash(s: String) -> String {
@@ -135,8 +156,8 @@ fn hash(s: String) -> String {
         .to_string();
 }
 
-fn transform(filename: String, source: String) -> TransformResult {
-    let mut stylesheet = StyleSheet::parse(
+fn transform(ruby: &Ruby, filename: String, source: String) -> Result<TransformResult, Error> {
+    let mut stylesheet = match StyleSheet::parse(
         &source,
         ParserOptions {
             filename: filename.clone(),
@@ -145,9 +166,11 @@ fn transform(filename: String, source: String) -> TransformResult {
                 dashed_idents: false,
             }),
             ..ParserOptions::default()
-        },
-    )
-    .unwrap();
+        }
+    ) {
+        Ok(style) => style,
+        Err(err) => return Err(Error::new(ruby.get_inner(&PARSE_ERROR), err.to_string()))
+    };
 
     let mut classes = HashMap::new();
     let mut elements = HashMap::new();
@@ -175,28 +198,32 @@ fn transform(filename: String, source: String) -> TransformResult {
     let serialized_exports = serde_json::to_string(&res.exports.unwrap()).unwrap();
     let serialized_dependencies = serde_json::to_string(&res.dependencies.unwrap()).unwrap();
 
-    TransformResult {
-        code: res.code,
-        classes: classes,
-        elements: elements,
-        serialized_exports: serialized_exports,
-        serialized_dependencies: serialized_dependencies,
-    }
+    Ok(
+        TransformResult {
+            code: res.code,
+            classes: classes,
+            elements: elements,
+            serialized_exports: serialized_exports,
+            serialized_dependencies: serialized_dependencies,
+        }
+    )
 }
 
-fn minify(filename: String, source: String) -> String {
-    let mut stylesheet = StyleSheet::parse(
+fn minify(ruby: &Ruby, filename: String, source: String) -> Result<String, Error> {
+    let mut stylesheet = match StyleSheet::parse(
         &source,
         ParserOptions {
             filename: filename,
             ..ParserOptions::default()
         },
-    )
-    .unwrap();
+    ) {
+        Ok(style) => style,
+        Err(err) => return Err(Error::new(ruby.get_inner(&PARSE_ERROR), err.to_string()))
+    };
 
     stylesheet.minify(MinifyOptions::default()).unwrap();
 
-    return to_css(stylesheet);
+    return Ok(to_css(stylesheet));
 }
 
 #[magnus::init]

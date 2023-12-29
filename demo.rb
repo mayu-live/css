@@ -3,7 +3,7 @@ require "mayu/css"
 require "json"
 require "io/console"
 
-def separator = puts "\e[3m#{" " * $stdout.winsize.last}\e[0m"
+def separator = puts "\e[0m#{"▂" * $stdout.winsize.last}\e[0m"
 def header(text) = puts "\e[1;35m#{text}\e[0m"
 def code(text) = puts "\e[33m#{text.chomp}\e[0m"
 
@@ -34,7 +34,7 @@ CSS
 
 separator
 
-result =  Mayu::CSS.transform(__FILE__, <<~CSS)
+result = Mayu::CSS.transform(__FILE__, <<~CSS)
   foo {
     background: rgb(50 32 42 / 50%);
     background-image: url("foobar.png");
@@ -57,3 +57,21 @@ header "Dependencies"
 pp result.dependencies
 header "Exports"
 pp result.exports
+
+separator
+
+header "errors"
+
+begin
+ Mayu::CSS.transform(__FILE__, <<~CSS).code
+  foo {
+    background: rgb(50 32 42 / 50%);
+  }
+  .bar {
+    background: rgb(50 32 42 / 50%
+    color: #f0f
+  }
+CSS
+rescue => e
+  puts "\e[31m#{e.inspect}\e[0m"
+end
