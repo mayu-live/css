@@ -121,6 +121,7 @@ fn to_css(stylesheet: StyleSheet) -> String {
     let res = stylesheet
         .to_css(PrinterOptions {
             analyze_dependencies: Some(DependencyOptions::default()),
+            minify: true,
             ..PrinterOptions::default()
         })
         .unwrap();
@@ -191,6 +192,7 @@ fn transform(ruby: &Ruby, filename: String, source: String) -> Result<TransformR
     let res = stylesheet
         .to_css(PrinterOptions {
             analyze_dependencies: Some(DependencyOptions::default()),
+            minify: true,
             ..PrinterOptions::default()
         })
         .unwrap();
