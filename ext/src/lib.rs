@@ -4,6 +4,7 @@ use lightningcss::{
     stylesheet::{MinifyOptions, ParserOptions, PrinterOptions, StyleSheet},
     visitor::{Visit, VisitTypes, Visitor},
 };
+use parcel_sourcemap::SourceMap;
 use magnus::{
     class, define_module, exception::ExceptionClass, function, gc::register_mark_object, method,
     prelude::*, value::Lazy, Error, RModule, Ruby,
@@ -39,6 +40,7 @@ struct TransformResult {
     elements: HashMap<String, String>,
     serialized_exports: String,
     serialized_dependencies: String,
+    source_map: Option<String>,
 }
 
 impl TransformResult {
@@ -60,6 +62,10 @@ impl TransformResult {
 
     fn elements(&self) -> HashMap<String, String> {
         self.elements.clone()
+    }
+
+    fn source_map(&self) -> Option<String> {
+        self.source_map.clone()
     }
 }
 
@@ -171,10 +177,19 @@ fn transform(
         elements: &mut elements,
     });
 
+    let mut sm = SourceMap::new("/");
+    sm.add_source(&filename);
+    sm.set_source_content(0, &source).unwrap();
+
+    if minify {
+        stylesheet.minify(MinifyOptions::default()).unwrap();
+    }
+
     let res = stylesheet
         .to_css(PrinterOptions {
             analyze_dependencies: Some(DependencyOptions::default()),
             minify: minify,
+            source_map: Some(&mut sm),
             ..PrinterOptions::default()
         })
         .unwrap();
@@ -188,6 +203,7 @@ fn transform(
         elements: elements,
         serialized_exports: serialized_exports,
         serialized_dependencies: serialized_dependencies,
+        source_map: sm.to_data_url(None).ok()
     })
 }
 
@@ -228,6 +244,7 @@ fn init() -> Result<(), Error> {
     class.define_method("code", method!(TransformResult::code, 0))?;
     class.define_method("classes", method!(TransformResult::classes, 0))?;
     class.define_method("elements", method!(TransformResult::elements, 0))?;
+    class.define_method("source_map", method!(TransformResult::source_map, 0))?;
     class.define_method(
         "serialized_exports",
         method!(TransformResult::serialized_exports, 0),

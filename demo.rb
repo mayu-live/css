@@ -66,13 +66,15 @@ separator
 
 header "dependencies"
 
-res = Mayu::CSS.transform(__FILE__, <<~CSS, minify: false)
+res = Mayu::CSS.transform(__FILE__, <<~CSS, minify: true)
   @import url("landscape.css") screen and (orientation: landscape);
   @import url("gridy.css") supports(display: grid) screen and (max-width: 400px);
 
   .foo {
     composes: hello from "./asd.css";
     background: url("hello.png");
+    color: #f0f;
+    background-color: #0f0;
   }
 CSS
 

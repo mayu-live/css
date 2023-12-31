@@ -37,12 +37,13 @@ module Mayu
         new(data[:line], data[:column])
     end
 
-    TransformResult = Data.define(:classes, :elements, :code, :dependencies, :exports) do
+    TransformResult = Data.define(:classes, :elements, :code, :source_map, :dependencies, :exports) do
       def self.from_ext(data) =
         new(
           classes: data.classes,
           elements: data.elements,
           code: data.code,
+          source_map: data.source_map,
           dependencies:
             data.serialized_dependencies
               .then { JSON.parse(_1, symbolize_names: true) }
@@ -80,6 +81,13 @@ module Mayu
         dependencies.reduce(code) do |code, dependency|
           code.gsub(dependency.placeholder, (yield dependency))
         end
+      end
+
+      def code_with_source_map
+        <<~CSS
+          #{code}
+          /*# sourceMappingURL=#{source_map} */
+        CSS
       end
     end
 

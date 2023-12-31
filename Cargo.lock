@@ -325,6 +325,7 @@ dependencies = [
  "base64",
  "lightningcss",
  "magnus",
+ "parcel_sourcemap",
  "rb-sys",
  "serde",
  "serde_json",
