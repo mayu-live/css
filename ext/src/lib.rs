@@ -5,17 +5,8 @@ use lightningcss::{
     visitor::{Visit, VisitTypes, Visitor},
 };
 use magnus::{
-    class,
-    define_module,
-    function,
-    method,
-    prelude::*,
-    Ruby,
-    RModule,
-    Error,
-    value::Lazy,
-    exception::ExceptionClass,
-    gc::register_mark_object
+    class, define_module, exception::ExceptionClass, function, gc::register_mark_object, method,
+    prelude::*, value::Lazy, Error, RModule, Ruby,
 };
 use std::{collections::HashMap, convert::Infallible};
 
@@ -41,7 +32,7 @@ struct TransformOptions {
     hash: String,
 }
 
-#[magnus::wrap(class = "Mayu::CSS::TransformResult", free_immediately, size)]
+#[magnus::wrap(class = "Mayu::CSS::ExtTransformResult", free_immediately, size)]
 struct TransformResult {
     code: String,
     classes: HashMap<String, String>,
@@ -117,20 +108,6 @@ impl<'a, 'i> Visitor<'i> for TransformNamesVisitor<'a> {
     }
 }
 
-fn to_css(stylesheet: StyleSheet) -> String {
-    let res = stylesheet
-        .to_css(PrinterOptions {
-            analyze_dependencies: Some(DependencyOptions::default()),
-            minify: true,
-            ..PrinterOptions::default()
-        })
-        .unwrap();
-
-    return res.code;
-}
-
-//////////////
-
 fn serialize(ruby: &Ruby, filename: String, source: String) -> Result<String, Error> {
     match StyleSheet::parse(
         &source,
@@ -140,7 +117,7 @@ fn serialize(ruby: &Ruby, filename: String, source: String) -> Result<String, Er
         },
     ) {
         Ok(stylesheet) => Ok(serde_json::to_string(&stylesheet).unwrap()),
-        Err(err) => return Err(Error::new(ruby.get_inner(&PARSE_ERROR), err.to_string()))
+        Err(err) => return Err(Error::new(ruby.get_inner(&PARSE_ERROR), err.to_string())),
     }
 }
 
@@ -157,7 +134,12 @@ fn hash(s: String) -> String {
         .to_string();
 }
 
-fn transform(ruby: &Ruby, filename: String, source: String) -> Result<TransformResult, Error> {
+fn transform(
+    ruby: &Ruby,
+    filename: String,
+    source: String,
+    minify: bool,
+) -> Result<TransformResult, Error> {
     let mut stylesheet = match StyleSheet::parse(
         &source,
         ParserOptions {
@@ -167,10 +149,10 @@ fn transform(ruby: &Ruby, filename: String, source: String) -> Result<TransformR
                 dashed_idents: false,
             }),
             ..ParserOptions::default()
-        }
+        },
     ) {
         Ok(style) => style,
-        Err(err) => return Err(Error::new(ruby.get_inner(&PARSE_ERROR), err.to_string()))
+        Err(err) => return Err(Error::new(ruby.get_inner(&PARSE_ERROR), err.to_string())),
     };
 
     let mut classes = HashMap::new();
@@ -192,7 +174,7 @@ fn transform(ruby: &Ruby, filename: String, source: String) -> Result<TransformR
     let res = stylesheet
         .to_css(PrinterOptions {
             analyze_dependencies: Some(DependencyOptions::default()),
-            minify: true,
+            minify: minify,
             ..PrinterOptions::default()
         })
         .unwrap();
@@ -200,15 +182,13 @@ fn transform(ruby: &Ruby, filename: String, source: String) -> Result<TransformR
     let serialized_exports = serde_json::to_string(&res.exports.unwrap()).unwrap();
     let serialized_dependencies = serde_json::to_string(&res.dependencies.unwrap()).unwrap();
 
-    Ok(
-        TransformResult {
-            code: res.code,
-            classes: classes,
-            elements: elements,
-            serialized_exports: serialized_exports,
-            serialized_dependencies: serialized_dependencies,
-        }
-    )
+    Ok(TransformResult {
+        code: res.code,
+        classes: classes,
+        elements: elements,
+        serialized_exports: serialized_exports,
+        serialized_dependencies: serialized_dependencies,
+    })
 }
 
 fn minify(ruby: &Ruby, filename: String, source: String) -> Result<String, Error> {
@@ -220,23 +200,31 @@ fn minify(ruby: &Ruby, filename: String, source: String) -> Result<String, Error
         },
     ) {
         Ok(style) => style,
-        Err(err) => return Err(Error::new(ruby.get_inner(&PARSE_ERROR), err.to_string()))
+        Err(err) => return Err(Error::new(ruby.get_inner(&PARSE_ERROR), err.to_string())),
     };
 
     stylesheet.minify(MinifyOptions::default()).unwrap();
 
-    return Ok(to_css(stylesheet));
+    let res = stylesheet
+        .to_css(PrinterOptions {
+            analyze_dependencies: Some(DependencyOptions::default()),
+            minify: true,
+            ..PrinterOptions::default()
+        })
+        .unwrap();
+
+    return Ok(res.code);
 }
 
 #[magnus::init]
 fn init() -> Result<(), Error> {
     let mayu = define_module("Mayu")?;
     let module = mayu.define_module("CSS")?;
-    module.define_singleton_method("minify", function!(minify, 2))?;
-    module.define_singleton_method("serialize", function!(serialize, 2))?;
-    module.define_singleton_method("transform", function!(transform, 2))?;
+    module.define_singleton_method("ext_minify", function!(minify, 2))?;
+    module.define_singleton_method("ext_serialize", function!(serialize, 2))?;
+    module.define_singleton_method("ext_transform", function!(transform, 3))?;
 
-    let class = module.define_class("TransformResult", class::object())?;
+    let class = module.define_class("ExtTransformResult", class::object())?;
     class.define_method("code", method!(TransformResult::code, 0))?;
     class.define_method("classes", method!(TransformResult::classes, 0))?;
     class.define_method("elements", method!(TransformResult::elements, 0))?;
