@@ -40,8 +40,8 @@ module Mayu
     TransformResult = Data.define(:classes, :elements, :code, :source_map, :dependencies, :exports) do
       def self.from_ext(data) =
         new(
-          classes: data.classes,
-          elements: data.elements,
+          classes: data.classes.transform_keys(&:to_sym),
+          elements: data.elements.transform_keys(&:to_sym),
           code: data.code,
           source_map: data.source_map,
           dependencies:
