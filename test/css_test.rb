@@ -72,5 +72,25 @@ class Mayu::CSS::Test < Minitest::Test
         ]
       ]
     )
+
+    assert_equal(JSON.parse(transformed.source_map, symbolize_names: true), {
+      version: 3,
+      sourceRoot: nil,
+      mappings: "AAAA,oDACA,kEAEA,gEAIA",
+      sources: ["test_transform.css"],
+      sourcesContent: [
+        "@import url(\"landscape.css\") screen and (orientation: landscape);\n" +
+        "@import url(\"gridy.css\") supports(display: grid) screen and (max-width: 400px);\n" +
+        "\n" +
+        "foo {\n" +
+        "  background: rgb(50 32 42 / 50%);\n" +
+        "  background-image: url(\"foobar.png\");\n" +
+        "}\n" +
+        ".bar {\n" +
+        "  background: rgb(50 32 42 / 50%);\n" +
+        "}\n"
+      ],
+      names: []
+    })
   end
 end

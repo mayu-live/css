@@ -177,9 +177,9 @@ fn transform(
         elements: &mut elements,
     });
 
-    let mut sm = SourceMap::new("/");
-    sm.add_source(&filename);
-    sm.set_source_content(0, &source).unwrap();
+    let mut source_map = SourceMap::new("/");
+    source_map.add_source(&filename);
+    source_map.set_source_content(0, &source).unwrap();
 
     if minify {
         stylesheet.minify(MinifyOptions::default()).unwrap();
@@ -189,7 +189,7 @@ fn transform(
         .to_css(PrinterOptions {
             analyze_dependencies: Some(DependencyOptions::default()),
             minify: minify,
-            source_map: Some(&mut sm),
+            source_map: Some(&mut source_map),
             ..PrinterOptions::default()
         })
         .unwrap();
@@ -203,7 +203,7 @@ fn transform(
         elements: elements,
         serialized_exports: serialized_exports,
         serialized_dependencies: serialized_dependencies,
-        source_map: sm.to_data_url(None).ok()
+        source_map: source_map.to_json(None).ok()
     })
 }
 
