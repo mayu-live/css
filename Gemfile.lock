@@ -10,7 +10,7 @@ GEM
     rake (13.1.0)
     rake-compiler (1.2.5)
       rake
-    rb_sys (0.9.85)
+    rb_sys (0.9.86)
 
 PLATFORMS
   aarch64-linux
@@ -24,7 +24,7 @@ DEPENDENCIES
   minitest (~> 5.20)
   rake (~> 13.1)
   rake-compiler (~> 1.2.5)
-  rb_sys (~> 0.9.85)
+  rb_sys (~> 0.9.86)
 
 BUNDLED WITH
    2.4.3
