@@ -67,6 +67,11 @@ jobs:
         run: ls -R
         working-directory: pkg/
 
+      - uses: actions/upload-artifact@v2
+        with:
+          name: cross-gem
+          path: ${{ steps.cross-gem.outputs.gem-path }}
+
   release:
     name: Release
     needs: cross-gem
