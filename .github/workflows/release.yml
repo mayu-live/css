@@ -101,7 +101,7 @@ jobs:
         with:
           path: pkg/
           pattern: cross-gem-*
-  +       merge-multiple: true
+          merge-multiple: true
 
       - name: Package source gem
         run: bundle exec rake gem
