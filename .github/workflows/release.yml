@@ -67,7 +67,7 @@ jobs:
         run: ls -R
         working-directory: pkg/
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: cross-gem
           path: ${{ steps.cross-gem.outputs.gem-path }}
@@ -97,7 +97,7 @@ jobs:
             exit 1
           fi
 
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: cross-gem
           path: pkg/
