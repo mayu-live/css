@@ -60,12 +60,10 @@ module Mayu
               .then { JSON.parse(_1, symbolize_names: true) }
               .transform_keys(&:to_s)
               .transform_values do |export|
-                export => { name:, composes:, isReferenced: }
-
                 Export[
-                  name:,
-                  referenced?: isReferenced,
-                  composes: composes.map do |compose|
+                  name: export[:name],
+                  referenced?: export[:isReferenced],
+                  composes: export[:composes].map do |compose|
                     case compose
                     in { type: "local", name: }
                       ComposeLocal[name:]
@@ -93,13 +91,13 @@ module Mayu
 
     SerializeResult = Data.define(:rules, :sources, :source_map_urls, :license_comments) do
       def self.from_ext(data)
-        JSON.parse(data, symbolize_names: true) => {
-          rules:,
-          sources:,
-          sourceMapUrls: source_map_urls,
-          licenseComments: license_comments,
-        }
-        new(rules:, sources:, source_map_urls:, license_comments:)
+        parsed = JSON.parse(data, symbolize_names: true)
+        new(
+          rules: parsed[:rules],
+          sources: parsed[:sources],
+          source_map_urls: parsed[:sourceMapUrls],
+          license_comments: parsed[:licenseComments]
+        )
       end
     end
 
