@@ -66,9 +66,9 @@ module Mayu
                   composes: export[:composes].map do |compose|
                     case compose
                     in { type: "local", name: }
-                      ComposeLocal[name:]
+                      ComposeLocal[name: name.to_sym]
                     in { type: "dependency", name:, specifier: }
-                      ComposeDependency[name:, specifier:]
+                      ComposeDependency[name: name.to_sym, specifier:]
                     end
                   end
                 ]
