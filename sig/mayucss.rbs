@@ -30,11 +30,11 @@ module Mayu
     end
 
     class ComposeLocal
-      attr_reader name: String
+      attr_reader name: Symbol
     end
 
     class ComposeDependency
-      attr_reader name: String
+      attr_reader name: Symbol
       attr_reader specifier: String
     end
 
