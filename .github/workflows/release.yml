@@ -1,5 +1,4 @@
-# This file is based on:
-# https://github.com/oxidize-rb/cross-gem-action
+# This file is based on https://github.com/oxidize-rb/actions/blob/main/cross-gem/readme.md
 
 name: Release
 
@@ -28,10 +27,10 @@ jobs:
               - arm-linux
               - x86_64-linux-musl
           stable-ruby-versions: |
-            exclude: [head, "3.1"]
+            exclude: [head]
 
   cross-gem:
-    name: Compile native gem
+    name: Compile native gem for ${{ matrix.ruby-platform }}
     runs-on: ubuntu-latest
     needs: ci-data
     strategy:
@@ -43,7 +42,7 @@ jobs:
 
       - uses: oxidize-rb/actions/setup-ruby-and-rust@v1
         with:
-          ruby-version: "3.3"
+          ruby-version: "3.4"
           bundler-cache: false
           cargo-cache: true
           cargo-vendor: true
