@@ -29,4 +29,4 @@ DEPENDENCIES
   rb_sys (~> 0.9.111)
 
 BUNDLED WITH
-   2.4.3
+   2.6.6
