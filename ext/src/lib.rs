@@ -153,6 +153,11 @@ fn transform(
             css_modules: Some(lightningcss::css_modules::Config {
                 pattern: lightningcss::css_modules::Pattern::parse("[local]").unwrap(),
                 dashed_idents: false,
+                animation: false,
+                grid: false,
+                container: false,
+                custom_idents: false,
+                pure: false,
             }),
             ..ParserOptions::default()
         },
