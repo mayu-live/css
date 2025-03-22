@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    mayu-css (0.1.3)
+    mayu-css (0.1.4)
 
 GEM
   remote: https://rubygems.org/

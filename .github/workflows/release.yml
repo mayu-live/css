@@ -83,7 +83,7 @@ jobs:
       - uses: oxidize-rb/actions/setup-ruby-and-rust@v1
         with:
           platform: ${{ matrix.ruby-platform }}
-          ruby-version: "3.3"
+          ruby-version: "3.4"
           bundler-cache: true
           cargo-cache: true
           cache-version: v1
