@@ -26,6 +26,7 @@ jobs:
               - x64-mingw-ucrt
               - arm-linux
               - x86_64-linux-musl
+              - aarch64-linux-musl
           stable-ruby-versions: |
             exclude: [head]
 

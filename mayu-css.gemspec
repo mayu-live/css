@@ -12,8 +12,8 @@ Gem::Specification.new do |spec|
   # spec.description = "TODO: Write a longer description or delete this line."
   spec.homepage = "https://github.com/mayu-live/mayu-css"
   spec.license = "MPL"
-  spec.required_ruby_version = ">= 3.1.3"
-  spec.required_rubygems_version = ">= 3.3.11"
+  spec.required_ruby_version = "~> 3.1"
+  spec.required_rubygems_version = "~> 3.3"
 
   # spec.metadata["allowed_push_host"] = "TODO: Set to your gem server 'https://example.com'"
 
@@ -29,7 +29,7 @@ Gem::Specification.new do |spec|
   spec.extensions = ["ext/Cargo.toml"]
 
   spec.add_development_dependency "rake-compiler", "~> 1.2.5"
-  spec.add_development_dependency "rb_sys", "~> 0.9.86"
+  spec.add_development_dependency "rb_sys", "~> 0.9.111"
   spec.add_development_dependency "rake", "~> 13.1"
   spec.add_development_dependency "minitest", "~> 5.20"
 end
