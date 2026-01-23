@@ -23,6 +23,8 @@ jobs:
           supported-ruby-platforms: |
             exclude:
               - x64-mingw32
+              - x64-mingw-ucrt
+              - aarch64-mingw-ucrt
               - arm-linux
               - x86_64-linux-musl
               - aarch64-linux-musl
