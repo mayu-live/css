@@ -6,7 +6,7 @@ use lightningcss::{
 };
 use parcel_sourcemap::SourceMap;
 use magnus::{
-    class, define_module, exception::ExceptionClass, function, gc::register_mark_object, method,
+    exception::ExceptionClass, function, gc::register_mark_object, method,
     prelude::*, value::Lazy, Error, RModule, Ruby,
 };
 use std::{collections::HashMap, convert::Infallible};
@@ -238,14 +238,14 @@ fn minify(ruby: &Ruby, filename: String, source: String) -> Result<String, Error
 }
 
 #[magnus::init]
-fn init() -> Result<(), Error> {
-    let mayu = define_module("Mayu")?;
+fn init(ruby: &magnus::Ruby) -> Result<(), Error> {
+    let mayu = ruby.define_module("Mayu")?;
     let module = mayu.define_module("CSS")?;
     module.define_singleton_method("ext_minify", function!(minify, 2))?;
     module.define_singleton_method("ext_serialize", function!(serialize, 2))?;
     module.define_singleton_method("ext_transform", function!(transform, 3))?;
 
-    let class = module.define_class("ExtTransformResult", class::object())?;
+    let class = module.define_class("ExtTransformResult", ruby.class_object())?;
     class.define_method("code", method!(TransformResult::code, 0))?;
     class.define_method("classes", method!(TransformResult::classes, 0))?;
     class.define_method("elements", method!(TransformResult::elements, 0))?;

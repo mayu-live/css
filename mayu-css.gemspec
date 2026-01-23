@@ -10,15 +10,15 @@ Gem::Specification.new do |spec|
 
   spec.summary = "CSS parser/transformer for Mayu Live"
   # spec.description = "TODO: Write a longer description or delete this line."
-  spec.homepage = "https://github.com/mayu-live/mayu-css"
+  spec.homepage = "https://github.com/mayu-live/css"
   spec.license = "MPL"
-  spec.required_ruby_version = "~> 3.1"
-  spec.required_rubygems_version = "~> 3.3"
+  spec.required_ruby_version = "~> 4.0"
+  spec.required_rubygems_version = "~> 4.0"
 
   # spec.metadata["allowed_push_host"] = "TODO: Set to your gem server 'https://example.com'"
 
   spec.metadata["homepage_uri"] = spec.homepage
-  # spec.metadata["source_code_uri"] = "TODO: Put your gem's public repo URL here."
+  spec.metadata["source_code_uri"] = spec.homepage
   # spec.metadata["changelog_uri"] = "TODO: Put your gem's CHANGELOG.md URL here."
 
   spec.platform = Gem::Platform::RUBY
@@ -28,8 +28,8 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
   spec.extensions = ["ext/Cargo.toml"]
 
-  spec.add_development_dependency "rake-compiler", "~> 1.2.5"
-  spec.add_development_dependency "rb_sys", "~> 0.9.111"
+  spec.add_development_dependency "rake-compiler", "~> 1.3"
+  spec.add_development_dependency "rb_sys", "~> 0.9.124"
   spec.add_development_dependency "rake", "~> 13.1"
-  spec.add_development_dependency "minitest", "~> 5.20"
+  spec.add_development_dependency "minitest", "~> 6.0"
 end
